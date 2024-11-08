@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserMultiFormatReader, Result } from "@zxing/library";
+import { BrowserMultiFormatReader, DecodeHintType, Result } from "@zxing/library";
 import Webcam from "react-webcam";
 
 export const BarcodeScannerComponent = ({
@@ -12,6 +12,7 @@ export const BarcodeScannerComponent = ({
   delay = 500,
   videoConstraints,
   stopStream,
+  hints,
 }: {
   onUpdate: (arg0: unknown, arg1?: Result) => void;
   onError?: (arg0: string | DOMException) => void;
@@ -22,11 +23,11 @@ export const BarcodeScannerComponent = ({
   delay?: number;
   videoConstraints?: MediaTrackConstraints;
   stopStream?: boolean;
+  hints?: Map<DecodeHintType, any>
 }): React.ReactElement => {
   const webcamRef = React.useRef(null);
-
   const capture = React.useCallback(() => {
-    const codeReader = new BrowserMultiFormatReader();
+    const codeReader = new BrowserMultiFormatReader(hints ?? undefined);
     // @ts-ignore
     const imageSrc = webcamRef?.current?.getScreenshot();
     if (imageSrc) {
